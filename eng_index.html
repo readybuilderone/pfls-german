@@ -1,0 +1,1834 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英语单词练习</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f5f7fa;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background: white;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 100;
+        }
+
+        .navbar-content {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .navbar-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .app-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .progress-badge {
+            background: #e8f4fd;
+            color: #1976d2;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .mode-switch {
+            display: flex;
+            background: #f0f0f0;
+            border-radius: 0.5rem;
+            padding: 0.25rem;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 0.5rem 1rem;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+            color: #666;
+        }
+
+        .mode-btn.active {
+            background: white;
+            color: #1976d2;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        /* Main Practice Area */
+        .main-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        .practice-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 1rem;
+        }
+
+        .chinese-word {
+            font-size: 2rem;
+            font-weight: 600;
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .word-hint {
+            font-size: 0.875rem;
+            color: #888;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .input-container {
+            margin-bottom: 1rem;
+        }
+
+        .english-input {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.25rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 0.5rem;
+            text-align: center;
+            transition: border-color 0.2s;
+        }
+
+        .english-input:focus {
+            outline: none;
+            border-color: #1976d2;
+        }
+
+        .english-input.correct {
+            border-color: #4caf50;
+            background-color: #f1f8e9;
+        }
+
+        .english-input.incorrect {
+            border-color: #f44336;
+            background-color: #ffebee;
+        }
+
+        /* Part of Speech Selection */
+        .pos-selection {
+            margin-bottom: 1.5rem;
+        }
+
+        .pos-label {
+            font-size: 0.875rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .pos-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .pos-btn {
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            border: 2px solid #e0e0e0;
+            background: #fafafa;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .pos-btn:hover {
+            border-color: #1976d2;
+            background: #e3f2fd;
+        }
+
+        .pos-btn.selected {
+            border-color: #1976d2;
+            background: #1976d2;
+            color: white;
+        }
+
+        .pos-btn.correct {
+            border-color: #4caf50;
+            background: #4caf50;
+            color: white;
+        }
+
+        .pos-btn.incorrect {
+            border-color: #f44336;
+            background: #f44336;
+            color: white;
+        }
+
+        .pos-btn.show-correct {
+            border-color: #4caf50;
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .pos-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        /* Check Button */
+        .check-btn {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.125rem;
+            background: #1976d2;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .check-btn:hover {
+            background: #1565c0;
+        }
+
+        .check-btn:disabled {
+            background: #bdbdbd;
+            cursor: not-allowed;
+        }
+
+        /* Feedback Area */
+        .feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .feedback.incorrect {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .feedback.partial {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .correct-answer {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .answer-details {
+            margin-top: 0.75rem;
+            font-size: 0.9rem;
+            text-align: left;
+            padding: 0.5rem;
+            background: rgba(255,255,255,0.5);
+            border-radius: 0.25rem;
+        }
+
+        .answer-detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.25rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .answer-detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: #666;
+        }
+
+        .detail-value {
+            font-weight: 600;
+        }
+
+        .detail-value.correct-val {
+            color: #2e7d32;
+        }
+
+        .detail-value.incorrect-val {
+            color: #c62828;
+        }
+
+        /* Control Area */
+        .control-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .control-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .control-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .control-group {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .control-label {
+            display: block;
+            font-size: 0.875rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .control-select {
+            width: 100%;
+            padding: 0.75rem;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 0.375rem;
+            background: white;
+            cursor: pointer;
+        }
+
+        .action-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .next-btn {
+            background: #4caf50;
+            color: white;
+        }
+
+        .next-btn:hover {
+            background: #43a047;
+        }
+
+        .next-btn:disabled {
+            background: #bdbdbd;
+            cursor: not-allowed;
+        }
+
+        .restart-btn {
+            background: #ff9800;
+            color: white;
+        }
+
+        .restart-btn:hover {
+            background: #f57c00;
+        }
+
+        /* Top Stats Bar */
+        .stats-bar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 0.75rem 1rem;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-item-top {
+            text-align: center;
+            padding: 0.4rem 0.8rem;
+            background: rgba(255,255,255,0.15);
+            border-radius: 0.5rem;
+            transition: transform 0.3s, background 0.3s;
+            min-width: 60px;
+        }
+
+        .stat-item-top .stat-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .stat-item-top .stat-label {
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.85);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-item-top.correct-stat .stat-value {
+            color: #a5d6a7;
+        }
+
+        .stat-item-top.wrong-stat .stat-value {
+            color: #ef9a9a;
+        }
+
+        .stat-item-top.rate-stat .stat-value {
+            color: #90caf9;
+        }
+
+        .stat-item-top.streak-stat {
+            background: rgba(255,215,0,0.25);
+            border: 1px solid rgba(255,215,0,0.5);
+        }
+
+        .stat-item-top.streak-stat .stat-value {
+            color: #ffd700;
+        }
+
+        /* Bounce animation for correct answers */
+        @keyframes bounce-correct {
+            0%, 100% { transform: scale(1); }
+            30% { transform: scale(1.3); }
+            60% { transform: scale(0.95); }
+        }
+
+        .stat-item-top.animate-correct {
+            animation: bounce-correct 0.5s ease;
+            background: rgba(76, 175, 80, 0.4);
+        }
+
+        /* Shake animation for wrong answers */
+        @keyframes shake-wrong {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-5px); }
+            40% { transform: translateX(5px); }
+            60% { transform: translateX(-5px); }
+            80% { transform: translateX(5px); }
+        }
+
+        .stat-item-top.animate-wrong {
+            animation: shake-wrong 0.4s ease;
+            background: rgba(244, 67, 54, 0.4);
+        }
+
+        /* Streak glow animation */
+        @keyframes streak-glow {
+            0%, 100% { box-shadow: 0 0 5px rgba(255,215,0,0.5); }
+            50% { box-shadow: 0 0 15px rgba(255,215,0,0.8), 0 0 25px rgba(255,165,0,0.5); }
+        }
+
+        .stat-item-top.streak-stat.active {
+            animation: streak-glow 1.5s ease infinite;
+        }
+
+        /* Encouragement message */
+        .encouragement {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem 2.5rem;
+            border-radius: 1rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .encouragement.show {
+            opacity: 1;
+            animation: pop-in 0.5s ease;
+        }
+
+        @keyframes pop-in {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+
+        .encouragement.perfect {
+            background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
+        }
+
+        /* Old stats in control card - hidden */
+        .stats {
+            display: none;
+        }
+
+        /* Results Screen */
+        .results-screen {
+            display: none;
+        }
+
+        .results-screen.show {
+            display: block;
+        }
+
+        .results-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .results-title {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .results-score {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #1976d2;
+        }
+
+        .results-percentage {
+            font-size: 1.25rem;
+            color: #666;
+        }
+
+        .wrong-words-section {
+            margin-top: 1.5rem;
+        }
+
+        .wrong-words-title {
+            font-size: 1rem;
+            color: #c62828;
+            margin-bottom: 0.75rem;
+        }
+
+        .wrong-word-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem;
+            background: #fff8f8;
+            border-radius: 0.375rem;
+            margin-bottom: 0.5rem;
+            border-left: 3px solid #f44336;
+        }
+
+        .wrong-english {
+            font-weight: 600;
+            color: #c62828;
+        }
+
+        .wrong-chinese {
+            color: #666;
+        }
+
+        .wrong-pos {
+            color: #888;
+            font-size: 0.875rem;
+        }
+
+        .results-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .redo-wrong-btn {
+            flex: 1;
+            padding: 0.75rem;
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .redo-wrong-btn:hover {
+            background: #d32f2f;
+        }
+
+        /* Retry Button */
+        .retry-btn {
+            margin-top: 0.75rem;
+            padding: 0.5rem 1.5rem;
+            font-size: 1rem;
+            background: #ff9800;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .retry-btn:hover {
+            background: #f57c00;
+        }
+
+        /* Unit Stats (Random Mode) */
+        .unit-stats {
+            margin-top: 1.5rem;
+        }
+
+        .unit-stats-title {
+            font-size: 1rem;
+            color: #2c3e50;
+            margin-bottom: 0.75rem;
+        }
+
+        .unit-stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .unit-stat-name {
+            color: #666;
+        }
+
+        .unit-stat-bar {
+            flex: 1;
+            height: 8px;
+            background: #eee;
+            border-radius: 4px;
+            margin: 0 1rem;
+            overflow: hidden;
+        }
+
+        .unit-stat-fill {
+            height: 100%;
+            background: #4caf50;
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+
+        .unit-stat-value {
+            font-weight: 600;
+            min-width: 50px;
+            text-align: right;
+        }
+
+        /* Storage Actions */
+        .storage-section {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+
+        .clear-storage-btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .clear-storage-btn:hover {
+            background: #ffebee;
+            border-color: #f44336;
+            color: #c62828;
+        }
+
+        /* Welcome Screen */
+        .welcome-screen {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .welcome-title {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .welcome-text {
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+
+        .start-btn {
+            padding: 1rem 2rem;
+            font-size: 1.125rem;
+            background: #1976d2;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+        }
+
+        .start-btn:hover {
+            background: #1565c0;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .navbar-content {
+                padding: 0 0.5rem;
+            }
+
+            .app-title {
+                font-size: 1.25rem;
+            }
+
+            .practice-card {
+                padding: 1.5rem 1rem;
+            }
+
+            .chinese-word {
+                font-size: 1.75rem;
+            }
+
+            .english-input {
+                font-size: 1.125rem;
+            }
+
+            .pos-btn {
+                padding: 0.4rem 0.75rem;
+                font-size: 0.875rem;
+            }
+
+            .control-row {
+                flex-direction: column;
+            }
+
+            .results-actions {
+                flex-direction: column;
+            }
+
+            .stats-bar {
+                gap: 0.5rem;
+                padding: 0.5rem;
+            }
+
+            .stat-item-top {
+                padding: 0.3rem 0.5rem;
+                min-width: 50px;
+            }
+
+            .stat-item-top .stat-value {
+                font-size: 1rem;
+            }
+
+            .stat-item-top .stat-label {
+                font-size: 0.6rem;
+            }
+
+            .encouragement {
+                font-size: 1.25rem;
+                padding: 1rem 1.5rem;
+            }
+        }
+
+        /* Hidden utility */
+        .hidden {
+            display: none !important;
+        }
+
+        /* iPad Portrait (768px - 1024px) */
+        @media (min-width: 768px) and (max-width: 1024px) {
+            .navbar-content,
+            .main-container {
+                max-width: 680px;
+            }
+
+            .app-title {
+                font-size: 1.75rem;
+            }
+
+            .mode-btn {
+                padding: 0.75rem 1.25rem;
+                font-size: 1rem;
+            }
+
+            .practice-card {
+                padding: 2.5rem;
+            }
+
+            .chinese-word {
+                font-size: 2.5rem;
+            }
+
+            .word-hint {
+                font-size: 1rem;
+            }
+
+            .english-input {
+                padding: 1.25rem;
+                font-size: 1.5rem;
+            }
+
+            .pos-btn {
+                padding: 0.6rem 1rem;
+                font-size: 1.125rem;
+            }
+
+            .check-btn {
+                padding: 1.25rem;
+                font-size: 1.25rem;
+            }
+
+            .action-btn {
+                padding: 1rem 1.25rem;
+                font-size: 1.125rem;
+            }
+
+            .control-select {
+                padding: 1rem;
+                font-size: 1.125rem;
+            }
+
+            .stats-bar {
+                padding: 1rem 1.5rem;
+                gap: 1.25rem;
+            }
+
+            .stat-item-top {
+                padding: 0.5rem 1rem;
+                min-width: 70px;
+            }
+
+            .stat-item-top .stat-value {
+                font-size: 1.5rem;
+            }
+
+            .stat-item-top .stat-label {
+                font-size: 0.8rem;
+            }
+
+            .feedback {
+                padding: 1.25rem;
+                font-size: 1.1rem;
+            }
+
+            .correct-answer {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* iPad Landscape & Larger iPads (1024px+) */
+        @media (min-width: 1024px) {
+            .navbar-content,
+            .main-container {
+                max-width: 900px;
+            }
+
+            .app-title {
+                font-size: 1.875rem;
+            }
+
+            .mode-btn {
+                padding: 0.85rem 1.5rem;
+                font-size: 1.0625rem;
+            }
+
+            .practice-card {
+                padding: 3rem;
+            }
+
+            .chinese-word {
+                font-size: 2.75rem;
+            }
+
+            .word-hint {
+                font-size: 1.0625rem;
+            }
+
+            .english-input {
+                padding: 1.5rem;
+                font-size: 1.625rem;
+            }
+
+            .pos-btn {
+                padding: 0.75rem 1.25rem;
+                font-size: 1.25rem;
+            }
+
+            .check-btn {
+                padding: 1.5rem;
+                font-size: 1.375rem;
+            }
+
+            .action-btn {
+                padding: 1.125rem 1.5rem;
+                font-size: 1.1875rem;
+            }
+
+            .control-select {
+                padding: 1.125rem;
+                font-size: 1.1875rem;
+            }
+
+            .stats-bar {
+                padding: 1rem 2rem;
+                gap: 1.5rem;
+            }
+
+            .stat-item-top {
+                padding: 0.6rem 1.25rem;
+                min-width: 80px;
+            }
+
+            .stat-item-top .stat-value {
+                font-size: 1.75rem;
+            }
+
+            .stat-item-top .stat-label {
+                font-size: 0.85rem;
+            }
+
+            .feedback {
+                padding: 1.5rem;
+                font-size: 1.125rem;
+            }
+
+            .correct-answer {
+                font-size: 1.625rem;
+            }
+
+            .control-row {
+                gap: 1.5rem;
+            }
+        }
+
+        /* iPad Landscape Compact - avoid scrolling */
+        @media (min-width: 768px) and (max-height: 850px) and (orientation: landscape) {
+            .navbar {
+                padding: 0.5rem 1rem;
+            }
+
+            .navbar-content {
+                gap: 0.5rem;
+            }
+
+            .app-title {
+                font-size: 1.25rem;
+            }
+
+            .mode-btn {
+                padding: 0.4rem 0.75rem;
+                font-size: 0.875rem;
+            }
+
+            .stats-bar {
+                padding: 0.4rem 1rem;
+            }
+
+            .stat-item-top {
+                padding: 0.25rem 0.5rem;
+                min-width: 50px;
+            }
+
+            .stat-item-top .stat-value {
+                font-size: 1.125rem;
+            }
+
+            .stat-item-top .stat-label {
+                font-size: 0.65rem;
+            }
+
+            .main-container {
+                padding: 0.75rem 1rem;
+            }
+
+            .practice-card {
+                padding: 1rem 1.5rem;
+                margin-bottom: 0.5rem;
+                border-radius: 0.75rem;
+            }
+
+            .chinese-word {
+                font-size: 1.75rem;
+                margin-bottom: 0.25rem;
+            }
+
+            .word-hint {
+                font-size: 0.8rem;
+                margin-bottom: 0.75rem;
+            }
+
+            .english-input {
+                padding: 0.75rem;
+                font-size: 1.25rem;
+            }
+
+            .pos-selection {
+                margin-bottom: 0.75rem;
+            }
+
+            .pos-btn {
+                padding: 0.4rem 0.6rem;
+                font-size: 0.875rem;
+            }
+
+            .check-btn {
+                padding: 0.75rem;
+                font-size: 1.125rem;
+            }
+
+            .feedback {
+                margin-top: 0.5rem;
+                padding: 0.5rem 0.75rem;
+            }
+
+            .correct-answer {
+                font-size: 1.125rem;
+                margin-top: 0.25rem;
+            }
+
+            .retry-btn {
+                margin-top: 0.5rem;
+                padding: 0.4rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .control-card {
+                padding: 0.75rem 1rem;
+                border-radius: 0.75rem;
+            }
+
+            .control-row {
+                margin-bottom: 0.5rem;
+            }
+
+            .control-label {
+                font-size: 0.75rem;
+                margin-bottom: 0.25rem;
+            }
+
+            .control-select {
+                padding: 0.5rem;
+                font-size: 0.9rem;
+            }
+
+            .action-btn {
+                padding: 0.6rem 1rem;
+                font-size: 1rem;
+            }
+
+            .storage-section {
+                margin-top: 0.5rem;
+                padding-top: 0.5rem;
+            }
+
+            .clear-storage-btn {
+                padding: 0.35rem 0.75rem;
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="navbar-top">
+                <h1 class="app-title">英语单词练习</h1>
+                <span class="progress-badge" id="progressBadge">0/0</span>
+            </div>
+            <div class="mode-switch">
+                <button class="mode-btn active" data-mode="unit" onclick="switchMode('unit')">按单元练习</button>
+                <button class="mode-btn" data-mode="random" onclick="switchMode('random')">随机测试</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Top Stats Bar -->
+    <div class="stats-bar" id="statsBar">
+        <div class="stat-item-top correct-stat" id="correctStat">
+            <div class="stat-value" id="correctCountTop">0</div>
+            <div class="stat-label">正确</div>
+        </div>
+        <div class="stat-item-top wrong-stat" id="wrongStat">
+            <div class="stat-value" id="wrongCountTop">0</div>
+            <div class="stat-label">错误</div>
+        </div>
+        <div class="stat-item-top rate-stat" id="rateStat">
+            <div class="stat-value" id="rateValue">0%</div>
+            <div class="stat-label">正确率</div>
+        </div>
+        <div class="stat-item-top streak-stat" id="streakStat">
+            <div class="stat-value" id="streakValue">0</div>
+            <div class="stat-label">连对</div>
+        </div>
+    </div>
+
+    <!-- Encouragement Message -->
+    <div class="encouragement" id="encouragement"></div>
+
+    <!-- Main Container -->
+    <main class="main-container">
+        <!-- Welcome Screen -->
+        <div class="practice-card welcome-screen" id="welcomeScreen">
+            <h2 class="welcome-title">欢迎使用英语单词练习</h2>
+            <p class="welcome-text">选择单元或随机测试开始练习</p>
+            <button class="start-btn" onclick="startPractice()">开始练习</button>
+        </div>
+
+        <!-- Practice Card -->
+        <div class="practice-card hidden" id="practiceCard">
+            <div class="chinese-word" id="chineseWord">中文释义</div>
+            <div class="word-hint" id="wordHint"></div>
+
+            <!-- English Word Input -->
+            <div class="input-container">
+                <input type="text" class="english-input" id="englishInput"
+                       placeholder="输入英语单词..." autocomplete="off"
+                       onkeydown="handleKeydown(event)">
+            </div>
+
+            <!-- Part of Speech Selection -->
+            <div class="pos-selection">
+                <div class="pos-label">选择词性 (Part of Speech)</div>
+                <div class="pos-buttons" id="posButtons">
+                    <button type="button" class="pos-btn" data-pos="n." onclick="selectPos('n.')">n.</button>
+                    <button type="button" class="pos-btn" data-pos="v." onclick="selectPos('v.')">v.</button>
+                    <button type="button" class="pos-btn" data-pos="adj." onclick="selectPos('adj.')">adj.</button>
+                    <button type="button" class="pos-btn" data-pos="adv." onclick="selectPos('adv.')">adv.</button>
+                    <button type="button" class="pos-btn" data-pos="prep." onclick="selectPos('prep.')">prep.</button>
+                    <button type="button" class="pos-btn" data-pos="pron." onclick="selectPos('pron.')">pron.</button>
+                    <button type="button" class="pos-btn" data-pos="conj." onclick="selectPos('conj.')">conj.</button>
+                </div>
+            </div>
+
+            <button class="check-btn" id="checkBtn" onclick="checkAnswer()">检查答案</button>
+
+            <div class="feedback" id="feedback">
+                <span id="feedbackIcon"></span>
+                <span id="feedbackText"></span>
+                <div class="correct-answer" id="correctAnswer"></div>
+                <div class="answer-details" id="answerDetails"></div>
+                <button class="retry-btn hidden" id="retryBtn" onclick="retryAnswer()">重新作答</button>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div class="practice-card results-screen" id="resultsScreen">
+            <div class="results-header">
+                <h2 class="results-title">练习完成！</h2>
+                <div class="results-score" id="resultsScore">0/0</div>
+                <div class="results-percentage" id="resultsPercentage">正确率: 0%</div>
+            </div>
+
+            <div class="wrong-words-section" id="wrongWordsSection">
+                <h3 class="wrong-words-title">错误单词</h3>
+                <div id="wrongWordsList"></div>
+            </div>
+
+            <div class="unit-stats hidden" id="unitStats">
+                <h3 class="unit-stats-title">各单元正确率</h3>
+                <div id="unitStatsList"></div>
+            </div>
+
+            <div class="results-actions">
+                <button class="redo-wrong-btn" id="redoWrongBtn" onclick="redoWrongWords()">重做错题</button>
+                <button class="action-btn restart-btn" onclick="restartPractice()">重新开始</button>
+            </div>
+        </div>
+
+        <!-- Control Card -->
+        <div class="control-card" id="controlCard">
+            <div class="control-row" id="unitControls">
+                <div class="control-group">
+                    <label class="control-label">选择单元</label>
+                    <select class="control-select" id="unitSelect" onchange="onUnitChange()">
+                        <!-- Dynamically populated from vocabularyData -->
+                    </select>
+                </div>
+            </div>
+
+            <div class="control-row hidden" id="randomControls">
+                <div class="control-group">
+                    <label class="control-label">题目数量</label>
+                    <select class="control-select" id="questionCount">
+                        <option value="10">10 题</option>
+                        <option value="15">15 题</option>
+                        <option value="20">20 题</option>
+                        <option value="25">25 题</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="control-row">
+                <button class="action-btn next-btn" id="nextBtn" onclick="nextWord()" disabled>下一题</button>
+                <button class="action-btn restart-btn" onclick="restartPractice()">重新开始</button>
+            </div>
+
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="correctCount">0</div>
+                    <div class="stat-label">正确</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="wrongCount">0</div>
+                    <div class="stat-label">错误</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="totalCount">0</div>
+                    <div class="stat-label">总计</div>
+                </div>
+            </div>
+
+            <div class="storage-section">
+                <button class="clear-storage-btn" onclick="clearStorage()">清除学习记录</button>
+            </div>
+        </div>
+    </main>
+
+    <script src="eng_vocabulary.js"></script>
+    <script>
+        // App State
+        let currentMode = 'unit';
+        let currentWords = [];
+        let currentIndex = 0;
+        let correctAnswers = 0;
+        let wrongWords = [];
+        let answered = false;
+        let unitStats = {};
+        let selectedPos = null;
+        let streak = 0;
+
+        // DOM Elements
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const practiceCard = document.getElementById('practiceCard');
+        const resultsScreen = document.getElementById('resultsScreen');
+        const controlCard = document.getElementById('controlCard');
+        const unitControls = document.getElementById('unitControls');
+        const randomControls = document.getElementById('randomControls');
+        const englishInput = document.getElementById('englishInput');
+        const posButtons = document.getElementById('posButtons');
+        const chineseWord = document.getElementById('chineseWord');
+        const wordHint = document.getElementById('wordHint');
+        const feedback = document.getElementById('feedback');
+        const feedbackIcon = document.getElementById('feedbackIcon');
+        const feedbackText = document.getElementById('feedbackText');
+        const correctAnswer = document.getElementById('correctAnswer');
+        const answerDetails = document.getElementById('answerDetails');
+        const checkBtn = document.getElementById('checkBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const retryBtn = document.getElementById('retryBtn');
+        const progressBadge = document.getElementById('progressBadge');
+
+        // Initialize
+        function init() {
+            loadProgress();
+            updateStats();
+
+            // Populate unit selector from vocabularyData
+            const unitSelect = document.getElementById('unitSelect');
+            const units = Object.keys(vocabularyData.units).sort((a, b) => {
+                // Sort by unit number
+                const numA = parseInt(a.match(/\d+/)[0]);
+                const numB = parseInt(b.match(/\d+/)[0]);
+                return numA - numB;
+            });
+            units.forEach(unit => {
+                const option = document.createElement('option');
+                option.value = unit;
+                option.textContent = unit;
+                unitSelect.appendChild(option);
+            });
+        }
+
+        // Select Part of Speech
+        function selectPos(pos) {
+            if (answered) return;
+
+            selectedPos = pos;
+
+            // Update button states
+            document.querySelectorAll('.pos-btn').forEach(btn => {
+                btn.classList.remove('selected');
+                if (btn.dataset.pos === pos) {
+                    btn.classList.add('selected');
+                }
+            });
+        }
+
+        // Mode Switch
+        function switchMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.mode === mode);
+            });
+
+            unitControls.classList.toggle('hidden', mode !== 'unit');
+            randomControls.classList.toggle('hidden', mode !== 'random');
+
+            // Reset to welcome state
+            showWelcome();
+        }
+
+        // Show Welcome
+        function showWelcome() {
+            welcomeScreen.classList.remove('hidden');
+            practiceCard.classList.add('hidden');
+            resultsScreen.classList.remove('show');
+            resetState();
+        }
+
+        // Start Practice
+        function startPractice() {
+            welcomeScreen.classList.add('hidden');
+            practiceCard.classList.remove('hidden');
+            resultsScreen.classList.remove('show');
+
+            if (currentMode === 'unit') {
+                const unit = document.getElementById('unitSelect').value;
+                const unitWords = vocabularyData.units[unit].words.map(w => ({
+                    ...w,
+                    unit: unit
+                }));
+                currentWords = shuffleArray(unitWords);
+            } else if (currentMode === 'random') {
+                const count = parseInt(document.getElementById('questionCount').value);
+                currentWords = getRandomWords(count);
+            }
+
+            currentIndex = 0;
+            correctAnswers = 0;
+            wrongWords = [];
+            unitStats = {};
+            streak = 0;
+
+            showCurrentWord();
+            updateStats();
+            document.getElementById('streakStat').classList.remove('active');
+        }
+
+        // Get Random Words
+        function getRandomWords(count) {
+            const allWords = [];
+            for (const [unit, unitData] of Object.entries(vocabularyData.units)) {
+                unitData.words.forEach(word => {
+                    allWords.push({
+                        ...word,
+                        unit: unit
+                    });
+                });
+            }
+            return shuffleArray(allWords).slice(0, Math.min(count, allWords.length));
+        }
+
+        // Shuffle Array
+        function shuffleArray(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        // Show Current Word
+        function showCurrentWord() {
+            if (currentIndex >= currentWords.length) {
+                showResults();
+                return;
+            }
+
+            const word = currentWords[currentIndex];
+
+            chineseWord.textContent = word.chinese;
+            wordHint.textContent = word.phonetic ? `音标: ${word.phonetic}` : '';
+
+            // Clear and reset inputs
+            englishInput.value = '';
+            englishInput.className = 'english-input';
+            englishInput.disabled = false;
+            englishInput.placeholder = '输入英语单词...';
+            englishInput.focus();
+
+            // Reset POS buttons
+            selectedPos = null;
+            document.querySelectorAll('.pos-btn').forEach(btn => {
+                btn.className = 'pos-btn';
+                btn.disabled = false;
+            });
+
+            feedback.classList.remove('show', 'correct', 'incorrect', 'partial');
+            answerDetails.innerHTML = '';
+            checkBtn.disabled = false;
+            nextBtn.disabled = true;
+            answered = false;
+
+            updateProgress();
+        }
+
+        // Handle Keydown
+        function handleKeydown(event) {
+            if (event.key === 'Enter') {
+                if (!answered) {
+                    checkAnswer();
+                } else {
+                    nextWord();
+                }
+            }
+        }
+
+        // Normalize POS for comparison
+        function normalizePos(pos) {
+            if (!pos) return '';
+            // Remove parentheses and trim
+            pos = pos.toLowerCase().trim();
+            // Handle variations
+            const mapping = {
+                'n.': 'n.',
+                'noun': 'n.',
+                'v.': 'v.',
+                'verb': 'v.',
+                'adj.': 'adj.',
+                'adjective': 'adj.',
+                'adv.': 'adv.',
+                'adverb': 'adv.',
+                'prep.': 'prep.',
+                'preposition': 'prep.',
+                'pron.': 'pron.',
+                'pronoun': 'pron.',
+                'conj.': 'conj.',
+                'conjunction': 'conj.',
+                'num.': 'num.',
+                'det.': 'det.',
+                'excl.': 'excl.',
+                'modal v.': 'v.',  // Modal verbs are a type of verb
+            };
+            return mapping[pos] || pos;
+        }
+
+        // Check Answer
+        function checkAnswer() {
+            if (answered) return;
+
+            const word = currentWords[currentIndex];
+            const userWord = englishInput.value.trim().toLowerCase();
+            const correctWord = word.word.toLowerCase();
+            const userPos = selectedPos || '';
+            const correctPos = word.partOfSpeech;
+
+            // Check word spelling (case-insensitive)
+            const wordCorrect = userWord === correctWord;
+
+            // Check part of speech (normalized comparison)
+            const normalizedUserPos = normalizePos(userPos);
+            const normalizedCorrectPos = normalizePos(correctPos);
+            const posCorrect = normalizedUserPos === normalizedCorrectPos;
+
+            const isFullyCorrect = wordCorrect && posCorrect;
+
+            // Update input styles
+            englishInput.disabled = true;
+            englishInput.classList.add(wordCorrect ? 'correct' : 'incorrect');
+
+            // Update POS button styles
+            document.querySelectorAll('.pos-btn').forEach(btn => {
+                btn.disabled = true;
+                const btnPos = normalizePos(btn.dataset.pos);
+                if (btnPos === normalizedCorrectPos) {
+                    if (posCorrect) {
+                        btn.classList.add('correct');
+                    } else {
+                        btn.classList.add('show-correct');
+                    }
+                } else if (btn.dataset.pos === userPos && !posCorrect) {
+                    btn.classList.add('incorrect');
+                }
+            });
+
+            // Build details HTML
+            const detailsHtml = `
+                <div class="answer-detail-row">
+                    <span class="detail-label">单词拼写:</span>
+                    <span class="detail-value ${wordCorrect ? 'correct-val' : 'incorrect-val'}">
+                        ${userWord || '(空)'} ${wordCorrect ? '✓' : '→ ' + word.word}
+                    </span>
+                </div>
+                <div class="answer-detail-row">
+                    <span class="detail-label">词性:</span>
+                    <span class="detail-value ${posCorrect ? 'correct-val' : 'incorrect-val'}">
+                        ${userPos || '(未选)'} ${posCorrect ? '✓' : '→ ' + correctPos}
+                    </span>
+                </div>
+            `;
+
+            // Determine feedback type
+            const correctCount = [wordCorrect, posCorrect].filter(x => x).length;
+
+            if (isFullyCorrect) {
+                feedback.classList.add('show', 'correct');
+                feedbackIcon.textContent = '✓';
+                feedbackText.textContent = '完全正确！';
+                correctAnswer.textContent = '';
+                retryBtn.classList.add('hidden');
+            } else if (correctCount > 0) {
+                feedback.classList.add('show', 'partial');
+                feedbackIcon.textContent = '~';
+                feedbackText.textContent = `部分正确 (${correctCount}/2)`;
+                correctAnswer.textContent = `完整答案: ${word.word} (${correctPos})`;
+                retryBtn.classList.remove('hidden');
+            } else {
+                feedback.classList.add('show', 'incorrect');
+                feedbackIcon.textContent = '✗';
+                feedbackText.textContent = '错误';
+                correctAnswer.textContent = `正确答案: ${word.word} (${correctPos})`;
+                retryBtn.classList.remove('hidden');
+            }
+
+            answerDetails.innerHTML = detailsHtml;
+            answered = true;
+            checkBtn.disabled = true;
+            nextBtn.disabled = false;
+
+            // Update stats
+            updateWordProgress(word.word, isFullyCorrect);
+
+            if (isFullyCorrect) {
+                correctAnswers++;
+                streak++;
+                checkStreakEncouragement();
+            } else {
+                wrongWords.push(word);
+                if (streak > 0) {
+                    streak = 0;
+                }
+            }
+
+            // Track unit stats for random mode
+            if (currentMode === 'random') {
+                if (!unitStats[word.unit]) {
+                    unitStats[word.unit] = { correct: 0, total: 0 };
+                }
+                unitStats[word.unit].total++;
+                if (isFullyCorrect) {
+                    unitStats[word.unit].correct++;
+                }
+            }
+
+            updateStats(isFullyCorrect);
+        }
+
+        // Retry Answer
+        function retryAnswer() {
+            const word = currentWords[currentIndex];
+
+            // Reset answered state
+            answered = false;
+
+            // Hide feedback and retry button
+            feedback.classList.remove('show', 'correct', 'incorrect', 'partial');
+            retryBtn.classList.add('hidden');
+            answerDetails.innerHTML = '';
+            correctAnswer.textContent = '';
+
+            // Re-enable check button, disable next button
+            checkBtn.disabled = false;
+            nextBtn.disabled = true;
+
+            // Reset input
+            englishInput.value = '';
+            englishInput.className = 'english-input';
+            englishInput.disabled = false;
+            englishInput.focus();
+
+            // Reset POS buttons
+            selectedPos = null;
+            document.querySelectorAll('.pos-btn').forEach(btn => {
+                btn.className = 'pos-btn';
+                btn.disabled = false;
+            });
+
+            // Remove from wrong words list if it was added
+            const wrongIndex = wrongWords.indexOf(word);
+            if (wrongIndex !== -1) {
+                wrongWords.splice(wrongIndex, 1);
+            }
+
+            updateStats();
+        }
+
+        // Next Word
+        function nextWord() {
+            currentIndex++;
+            showCurrentWord();
+        }
+
+        // Show Results
+        function showResults() {
+            practiceCard.classList.add('hidden');
+            resultsScreen.classList.add('show');
+
+            const total = currentWords.length;
+            const percentage = total > 0 ? Math.round((correctAnswers / total) * 100) : 0;
+
+            document.getElementById('resultsScore').textContent = `${correctAnswers}/${total}`;
+            document.getElementById('resultsPercentage').textContent = `正确率: ${percentage}%`;
+
+            // Show special encouragement for perfect score
+            if (percentage === 100 && total > 0) {
+                setTimeout(() => {
+                    showEncouragement('满分！恭喜你！', true);
+                }, 500);
+            } else if (percentage >= 80) {
+                setTimeout(() => {
+                    showEncouragement('做得很好！继续努力！');
+                }, 500);
+            }
+
+            // Wrong words section
+            const wrongWordsSection = document.getElementById('wrongWordsSection');
+            const wrongWordsList = document.getElementById('wrongWordsList');
+            const redoWrongBtn = document.getElementById('redoWrongBtn');
+
+            if (wrongWords.length > 0) {
+                wrongWordsSection.classList.remove('hidden');
+                redoWrongBtn.classList.remove('hidden');
+                wrongWordsList.innerHTML = wrongWords.map(word => `
+                    <div class="wrong-word-item">
+                        <span class="wrong-english">${word.word} <span class="wrong-pos">(${word.partOfSpeech})</span></span>
+                        <span class="wrong-chinese">${word.chinese}</span>
+                    </div>
+                `).join('');
+            } else {
+                wrongWordsSection.classList.add('hidden');
+                redoWrongBtn.classList.add('hidden');
+            }
+
+            // Unit stats for random mode
+            const unitStatsSection = document.getElementById('unitStats');
+            const unitStatsList = document.getElementById('unitStatsList');
+
+            if (currentMode === 'random' && Object.keys(unitStats).length > 0) {
+                unitStatsSection.classList.remove('hidden');
+                unitStatsList.innerHTML = Object.entries(unitStats)
+                    .sort((a, b) => {
+                        const numA = parseInt(a[0].match(/\d+/)[0]);
+                        const numB = parseInt(b[0].match(/\d+/)[0]);
+                        return numA - numB;
+                    })
+                    .map(([unit, stats]) => {
+                        const pct = Math.round((stats.correct / stats.total) * 100);
+                        return `
+                            <div class="unit-stat-item">
+                                <span class="unit-stat-name">${unit}</span>
+                                <div class="unit-stat-bar">
+                                    <div class="unit-stat-fill" style="width: ${pct}%"></div>
+                                </div>
+                                <span class="unit-stat-value">${stats.correct}/${stats.total}</span>
+                            </div>
+                        `;
+                    }).join('');
+            } else {
+                unitStatsSection.classList.add('hidden');
+            }
+        }
+
+        // Redo Wrong Words
+        function redoWrongWords() {
+            if (wrongWords.length === 0) return;
+
+            currentWords = shuffleArray([...wrongWords]);
+            currentIndex = 0;
+            correctAnswers = 0;
+            wrongWords = [];
+            unitStats = {};
+            streak = 0;
+
+            resultsScreen.classList.remove('show');
+            practiceCard.classList.remove('hidden');
+
+            showCurrentWord();
+            updateStats();
+            document.getElementById('streakStat').classList.remove('active');
+        }
+
+        // Restart Practice
+        function restartPractice() {
+            startPractice();
+        }
+
+        // Reset State
+        function resetState() {
+            currentWords = [];
+            currentIndex = 0;
+            correctAnswers = 0;
+            wrongWords = [];
+            answered = false;
+            unitStats = {};
+            streak = 0;
+            updateStats();
+            updateProgress();
+            document.getElementById('streakStat').classList.remove('active');
+        }
+
+        // On Unit Change
+        function onUnitChange() {
+            if (!welcomeScreen.classList.contains('hidden')) return;
+            startPractice();
+        }
+
+        // Update Progress Badge
+        function updateProgress() {
+            const total = currentWords.length;
+            const current = Math.min(currentIndex + 1, total);
+            progressBadge.textContent = total > 0 ? `${current}/${total}` : '0/0';
+        }
+
+        // Update Stats Display
+        function updateStats(isCorrectAnswer = null) {
+            const total = currentIndex + (answered ? 1 : 0);
+            const wrongCount = wrongWords.length;
+            const rate = total > 0 ? Math.round((correctAnswers / total) * 100) : 0;
+
+            // Update top stats bar
+            document.getElementById('correctCountTop').textContent = correctAnswers;
+            document.getElementById('wrongCountTop').textContent = wrongCount;
+            document.getElementById('rateValue').textContent = rate + '%';
+            document.getElementById('streakValue').textContent = streak;
+
+            // Update old stats (kept for compatibility)
+            document.getElementById('correctCount').textContent = correctAnswers;
+            document.getElementById('wrongCount').textContent = wrongCount;
+            document.getElementById('totalCount').textContent = total;
+
+            // Animate stats on answer
+            if (isCorrectAnswer === true) {
+                animateStat('correctStat', 'animate-correct');
+                // Activate streak glow if streak > 0
+                const streakStat = document.getElementById('streakStat');
+                if (streak > 0) {
+                    streakStat.classList.add('active');
+                }
+            } else if (isCorrectAnswer === false) {
+                animateStat('wrongStat', 'animate-wrong');
+                // Remove streak glow
+                document.getElementById('streakStat').classList.remove('active');
+            }
+        }
+
+        // Animate a stat element
+        function animateStat(elementId, animationClass) {
+            const element = document.getElementById(elementId);
+            element.classList.remove(animationClass);
+            // Trigger reflow to restart animation
+            void element.offsetWidth;
+            element.classList.add(animationClass);
+
+            // Remove animation class after it completes
+            setTimeout(() => {
+                element.classList.remove(animationClass);
+            }, 500);
+        }
+
+        // Show encouragement message
+        function showEncouragement(message, isPerfect = false) {
+            const encouragement = document.getElementById('encouragement');
+            encouragement.textContent = message;
+            encouragement.classList.remove('perfect');
+            if (isPerfect) {
+                encouragement.classList.add('perfect');
+            }
+            encouragement.classList.add('show');
+
+            setTimeout(() => {
+                encouragement.classList.remove('show');
+            }, 2000);
+        }
+
+        // Check and show streak encouragement
+        function checkStreakEncouragement() {
+            if (streak === 3) {
+                showEncouragement('不错！继续保持！');
+            } else if (streak === 5) {
+                showEncouragement('太棒了！你真厉害！');
+            } else if (streak === 10) {
+                showEncouragement('完美！你是英语达人！', true);
+            } else if (streak === 15) {
+                showEncouragement('无敌！无人能挡！', true);
+            } else if (streak === 20) {
+                showEncouragement('传奇！英语之神！', true);
+            }
+        }
+
+        // LocalStorage Functions
+        function loadProgress() {
+            try {
+                const data = localStorage.getItem('englishVocabProgress');
+                return data ? JSON.parse(data) : {};
+            } catch (e) {
+                return {};
+            }
+        }
+
+        function saveProgress(progress) {
+            try {
+                localStorage.setItem('englishVocabProgress', JSON.stringify(progress));
+            } catch (e) {
+                console.error('Failed to save progress:', e);
+            }
+        }
+
+        function updateWordProgress(word, isCorrect) {
+            const progress = loadProgress();
+            if (!progress[word]) {
+                progress[word] = { attempts: 0, correct: 0 };
+            }
+            progress[word].attempts++;
+            if (isCorrect) {
+                progress[word].correct++;
+            }
+            saveProgress(progress);
+        }
+
+        function clearStorage() {
+            if (confirm('确定要清除所有学习记录吗？')) {
+                localStorage.removeItem('englishVocabProgress');
+                alert('学习记录已清除');
+            }
+        }
+
+        // Initialize on load
+        init();
+    </script>
+</body>
+</html>
