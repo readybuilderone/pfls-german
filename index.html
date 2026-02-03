@@ -29,6 +29,7 @@
 
         .navbar-content {
             max-width: 800px;
+            width: 100%;
             margin: 0 auto;
             display: flex;
             flex-direction: column;
@@ -473,6 +474,12 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             padding: 0.75rem 1rem;
             color: white;
+        }
+
+        .stats-bar-content {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -1139,21 +1146,13 @@
                 padding-right: 280px;
             }
 
-            .navbar {
-                margin-right: 280px;
-            }
-
-            .stats-bar {
-                margin-right: 280px;
-            }
-
             .encouragement {
                 margin-right: 140px;
             }
         }
 
-        /* 平板端 - 侧边栏可折叠 */
-        @media (max-width: 1199px) and (min-width: 769px) {
+        /* 平板端 - 侧边栏可折叠 (1025px - 1199px) */
+        @media (max-width: 1199px) and (min-width: 1025px) {
             .stats-sidebar {
                 width: 260px;
             }
@@ -1176,9 +1175,10 @@
             }
         }
 
-        /* 移动端 - 底部抽屉式 */
-        @media (max-width: 768px) {
-            .stats-sidebar {
+        /* 移动端和iPad - 底部抽屉式 */
+        @media (max-width: 1024px) {
+            .stats-sidebar,
+            .stats-sidebar.collapsed {
                 position: fixed;
                 top: auto;
                 bottom: 0;
@@ -1211,7 +1211,8 @@
                 border-radius: 1rem 1rem 0 0;
             }
 
-            .stats-sidebar.expanded .sidebar-toggle {
+            .stats-sidebar.expanded ~ .sidebar-toggle,
+            .sidebar-toggle.hidden {
                 display: none;
             }
 
@@ -1240,7 +1241,8 @@
         /* iPad Portrait (768px - 1024px) */
         @media (min-width: 768px) and (max-width: 1024px) {
             .navbar-content,
-            .main-container {
+            .main-container,
+            .stats-bar-content {
                 max-width: 680px;
             }
 
@@ -1336,7 +1338,8 @@
         /* iPad Landscape & Larger iPads (1024px+) */
         @media (min-width: 1024px) {
             .navbar-content,
-            .main-container {
+            .main-container,
+            .stats-bar-content {
                 max-width: 900px;
             }
 
@@ -1609,6 +1612,7 @@
 
     <!-- Top Stats Bar -->
     <div class="stats-bar" id="statsBar">
+        <div class="stats-bar-content">
         <div class="stat-item-top correct-stat" id="correctStat">
             <div class="stat-value" id="correctCountTop">0</div>
             <div class="stat-label">正确</div>
@@ -1624,6 +1628,7 @@
         <div class="stat-item-top streak-stat" id="streakStat">
             <div class="stat-value" id="streakValue">0</div>
             <div class="stat-label">连对</div>
+        </div>
         </div>
     </div>
 
@@ -1791,10 +1796,6 @@
 
     <!-- 侧边栏统计面板 -->
     <aside class="stats-sidebar collapsed" id="statsSidebar">
-        <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()">
-            <span class="toggle-icon">📊</span>
-            <span class="toggle-text">统计</span>
-        </button>
         <div class="sidebar-content" id="sidebarContent">
             <div class="sidebar-header">
                 <h3 class="sidebar-title">学习统计</h3>
@@ -1853,6 +1854,11 @@
             </div>
         </div>
     </aside>
+    <!-- 统计按钮（独立于侧边栏，避免transform影响fixed定位） -->
+    <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()">
+        <span class="toggle-icon">📊</span>
+        <span class="toggle-text">统计</span>
+    </button>
 
     <!-- 侧边栏遮罩层 -->
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
