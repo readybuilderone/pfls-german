@@ -47,6 +47,22 @@
             color: #2c3e50;
         }
 
+        .lang-switch {
+            padding: 0.4rem 0.8rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .lang-switch:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+        }
+
         .progress-badge {
             background: #e8f4fd;
             color: #1976d2;
@@ -1066,6 +1082,7 @@
         <div class="navbar-content">
             <div class="navbar-top">
                 <h1 class="app-title">英语单词练习</h1>
+                <a href="index.html" class="lang-switch">切换德语</a>
                 <span class="progress-badge" id="progressBadge">0/0</span>
             </div>
             <div class="mode-switch">
