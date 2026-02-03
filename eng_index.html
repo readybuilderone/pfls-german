@@ -783,6 +783,320 @@
             display: none !important;
         }
 
+        /* ==================== 侧边栏统计面板 ==================== */
+
+        /* 侧边栏容器 */
+        .stats-sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: 100vh;
+            width: 280px;
+            background: white;
+            box-shadow: -2px 0 15px rgba(0,0,0,0.1);
+            z-index: 200;
+            transform: translateX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .stats-sidebar.collapsed {
+            transform: translateX(280px);
+        }
+
+        /* 切换按钮 */
+        .sidebar-toggle {
+            display: none;
+            position: fixed;
+            right: 280px;
+            top: 50%;
+            transform: translateY(-50%);
+            flex-direction: column;
+            align-items: center;
+            padding: 0.75rem 0.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 0.5rem 0 0 0.5rem;
+            cursor: pointer;
+            z-index: 201;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.2);
+            transition: right 0.3s ease;
+        }
+
+        .sidebar-toggle .toggle-icon {
+            font-size: 1.25rem;
+        }
+
+        .sidebar-toggle .toggle-text {
+            writing-mode: vertical-rl;
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        /* 侧边栏内容 */
+        .sidebar-content {
+            height: 100%;
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .sidebar-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        .sidebar-close {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #888;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .sidebar-close:hover {
+            color: #333;
+        }
+
+        /* 统计区块 */
+        .stats-section {
+            background: #f8f9fa;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #666;
+            margin: 0 0 0.75rem 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* 统计行 */
+        .stat-row {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .stat-row:last-child {
+            border-bottom: none;
+        }
+
+        .stat-row.highlight {
+            background: linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            margin: 0.5rem -0.5rem;
+            border-bottom: none;
+        }
+
+        .stat-icon {
+            width: 24px;
+            font-size: 1rem;
+            margin-right: 0.5rem;
+        }
+
+        .stat-name {
+            flex: 1;
+            font-size: 0.875rem;
+            color: #555;
+        }
+
+        .stat-number {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .stat-row.highlight .stat-number {
+            color: #764ba2;
+        }
+
+        /* 掌握进度条 */
+        .mastery-progress {
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .progress-text {
+            font-size: 0.75rem;
+            color: #888;
+        }
+
+        /* 今日统计区块 */
+        .today-section {
+            background: linear-gradient(135deg, rgba(102,126,234,0.05) 0%, rgba(118,75,162,0.05) 100%);
+            border: 1px solid rgba(102,126,234,0.2);
+        }
+
+        /* 学习提示 */
+        .stats-tip {
+            text-align: center;
+            padding: 1rem;
+            background: #fff8e1;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            color: #f57c00;
+            border: 1px dashed #ffc107;
+        }
+
+        /* 遮罩层 */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 199;
+        }
+
+        .sidebar-overlay.show {
+            display: block;
+        }
+
+        /* ==================== 侧边栏响应式布局 ==================== */
+
+        /* 桌面端 - 侧边栏常驻 */
+        @media (min-width: 1200px) {
+            body {
+                padding-right: 280px;
+            }
+
+            .navbar {
+                margin-right: 280px;
+            }
+
+            .stats-bar {
+                margin-right: 280px;
+            }
+
+            .encouragement {
+                margin-right: 140px;
+            }
+        }
+
+        /* 平板端 - 侧边栏可折叠 */
+        @media (max-width: 1199px) and (min-width: 769px) {
+            .stats-sidebar {
+                width: 260px;
+            }
+
+            .stats-sidebar.collapsed {
+                transform: translateX(260px);
+            }
+
+            .sidebar-toggle {
+                display: flex;
+                right: 0;
+            }
+
+            .stats-sidebar:not(.collapsed) .sidebar-toggle {
+                right: 260px;
+            }
+
+            .stats-sidebar.collapsed .sidebar-toggle {
+                right: 0;
+            }
+        }
+
+        /* 移动端 - 底部抽屉式 */
+        @media (max-width: 768px) {
+            .stats-sidebar {
+                position: fixed;
+                top: auto;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                width: 100%;
+                height: auto;
+                max-height: 70vh;
+                transform: translateY(100%);
+                border-radius: 1rem 1rem 0 0;
+                box-shadow: 0 -5px 20px rgba(0,0,0,0.15);
+            }
+
+            .stats-sidebar.expanded {
+                transform: translateY(0);
+            }
+
+            .sidebar-toggle {
+                display: flex;
+                position: fixed;
+                bottom: 0;
+                right: auto;
+                left: 50%;
+                top: auto;
+                transform: translateX(-50%);
+                flex-direction: row;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.75rem 1.5rem;
+                border-radius: 1rem 1rem 0 0;
+            }
+
+            .stats-sidebar.expanded .sidebar-toggle {
+                display: none;
+            }
+
+            .sidebar-toggle .toggle-text {
+                writing-mode: horizontal-tb;
+                margin-top: 0;
+            }
+
+            .sidebar-close {
+                display: block;
+            }
+
+            .sidebar-content {
+                padding: 1rem;
+            }
+
+            .stats-section {
+                padding: 0.75rem;
+            }
+
+            .stats-tip {
+                padding: 0.75rem;
+            }
+        }
+
         /* iPad Portrait (768px - 1024px) */
         @media (min-width: 768px) and (max-width: 1024px) {
             .navbar-content,
@@ -1234,6 +1548,74 @@
         </div>
     </main>
 
+    <!-- 侧边栏统计面板 -->
+    <aside class="stats-sidebar collapsed" id="statsSidebar">
+        <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()">
+            <span class="toggle-icon">📊</span>
+            <span class="toggle-text">统计</span>
+        </button>
+        <div class="sidebar-content" id="sidebarContent">
+            <div class="sidebar-header">
+                <h3 class="sidebar-title">学习统计</h3>
+                <button class="sidebar-close" onclick="toggleSidebar()">×</button>
+            </div>
+
+            <!-- 总体统计 -->
+            <div class="stats-section">
+                <h4 class="section-title">总体进度</h4>
+                <div class="stat-row">
+                    <span class="stat-icon">📝</span>
+                    <span class="stat-name">总练习次数</span>
+                    <span class="stat-number" id="totalAttemptsSidebar">0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-icon">✓</span>
+                    <span class="stat-name">总体正确率</span>
+                    <span class="stat-number" id="totalAccuracySidebar">0%</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-icon">📚</span>
+                    <span class="stat-name">已学单词</span>
+                    <span class="stat-number" id="wordsLearnedSidebar">0</span>
+                </div>
+                <div class="stat-row highlight">
+                    <span class="stat-icon">⭐</span>
+                    <span class="stat-name">已掌握</span>
+                    <span class="stat-number" id="wordsMasteredSidebar">0</span>
+                </div>
+                <div class="mastery-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="masteryProgressSidebar"></div>
+                    </div>
+                    <span class="progress-text" id="masteryTextSidebar">0/0 单词</span>
+                </div>
+            </div>
+
+            <!-- 今日统计 -->
+            <div class="stats-section today-section">
+                <h4 class="section-title">今日学习</h4>
+                <div class="stat-row">
+                    <span class="stat-icon">📅</span>
+                    <span class="stat-name">今日练习</span>
+                    <span class="stat-number" id="todayAttemptsSidebar">0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-icon">🎯</span>
+                    <span class="stat-name">今日正确率</span>
+                    <span class="stat-number" id="todayAccuracySidebar">0%</span>
+                </div>
+            </div>
+
+            <!-- 学习提示 -->
+            <div class="stats-tip" id="statsTipSidebar">
+                开始练习吧！
+            </div>
+        </div>
+    </aside>
+
+    <!-- 侧边栏遮罩层 -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
     <script src="eng_vocabulary.js"></script>
     <script>
         // App State
@@ -1537,8 +1919,8 @@
             checkBtn.disabled = true;
             nextBtn.disabled = false;
 
-            // Update stats
-            updateWordProgress(word.word, isFullyCorrect);
+            // Update stats (使用新版本函数)
+            updateWordProgressV2(word.word, isFullyCorrect);
 
             if (isFullyCorrect) {
                 correctAnswers++;
@@ -1840,12 +2222,309 @@
         function clearStorage() {
             if (confirm('确定要清除所有学习记录吗？')) {
                 localStorage.removeItem('englishVocabProgress');
+                localStorage.removeItem('englishVocabProgress_v2');
+                // 重新初始化统计数据
+                initializeStatsData();
+                updateSidebarStats();
                 alert('学习记录已清除');
             }
         }
 
+        // ==================== 侧边栏统计功能 ====================
+
+        const STORAGE_VERSION = 2;
+        const STORAGE_KEY_V2 = 'englishVocabProgress_v2';
+
+        // 获取今天的日期字符串
+        function getTodayDateString() {
+            const today = new Date();
+            return today.toISOString().split('T')[0];
+        }
+
+        // 初始化统计数据结构
+        function initializeStatsData() {
+            let data = loadStatsData();
+
+            if (!data) {
+                data = migrateOldData();
+            }
+
+            // 检查并重置今日统计（如果日期变更）
+            if (data.todayStats.date !== getTodayDateString()) {
+                data.todayStats = {
+                    date: getTodayDateString(),
+                    attempts: 0,
+                    correct: 0
+                };
+                saveStatsData(data);
+            }
+
+            return data;
+        }
+
+        // 迁移旧数据到新结构
+        function migrateOldData() {
+            const oldData = loadProgress();
+
+            const newData = {
+                version: STORAGE_VERSION,
+                totalStats: {
+                    totalAttempts: 0,
+                    totalCorrect: 0,
+                    wordsLearned: 0,
+                    wordsMastered: 0
+                },
+                todayStats: {
+                    date: getTodayDateString(),
+                    attempts: 0,
+                    correct: 0
+                },
+                words: {}
+            };
+
+            if (oldData && typeof oldData === 'object') {
+                for (const [word, stats] of Object.entries(oldData)) {
+                    if (stats && typeof stats === 'object') {
+                        newData.words[word] = {
+                            attempts: stats.attempts || 0,
+                            correct: stats.correct || 0,
+                            lastPracticed: null
+                        };
+
+                        newData.totalStats.totalAttempts += stats.attempts || 0;
+                        newData.totalStats.totalCorrect += stats.correct || 0;
+
+                        if (stats.attempts > 0) {
+                            newData.totalStats.wordsLearned++;
+
+                            if (stats.attempts >= 3) {
+                                const accuracy = stats.correct / stats.attempts;
+                                if (accuracy >= 0.8) {
+                                    newData.totalStats.wordsMastered++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            saveStatsData(newData);
+            return newData;
+        }
+
+        // 加载统计数据
+        function loadStatsData() {
+            try {
+                const data = localStorage.getItem(STORAGE_KEY_V2);
+                if (data) {
+                    const parsed = JSON.parse(data);
+                    if (parsed.version === STORAGE_VERSION) {
+                        return parsed;
+                    }
+                }
+                return null;
+            } catch (e) {
+                console.error('Failed to load stats data:', e);
+                return null;
+            }
+        }
+
+        // 保存统计数据
+        function saveStatsData(data) {
+            try {
+                localStorage.setItem(STORAGE_KEY_V2, JSON.stringify(data));
+            } catch (e) {
+                console.error('Failed to save stats data:', e);
+            }
+        }
+
+        // 判断单词是否掌握
+        function isMastered(wordStats) {
+            if (!wordStats || wordStats.attempts < 3) return false;
+            return (wordStats.correct / wordStats.attempts) >= 0.8;
+        }
+
+        // 获取总词汇数量
+        function getTotalWordCount() {
+            let count = 0;
+            for (const unit of Object.values(vocabularyData.units)) {
+                count += unit.words.length;
+            }
+            return count;
+        }
+
+        // 更新单词练习记录（新版本）
+        function updateWordProgressV2(word, isCorrect) {
+            const data = initializeStatsData();
+            const today = getTodayDateString();
+
+            // 更新总体统计
+            data.totalStats.totalAttempts++;
+            if (isCorrect) {
+                data.totalStats.totalCorrect++;
+            }
+
+            // 更新今日统计
+            if (data.todayStats.date !== today) {
+                data.todayStats = { date: today, attempts: 0, correct: 0 };
+            }
+            data.todayStats.attempts++;
+            if (isCorrect) {
+                data.todayStats.correct++;
+            }
+
+            // 更新单词详情
+            const isNewWord = !data.words[word] || data.words[word].attempts === 0;
+
+            if (!data.words[word]) {
+                data.words[word] = { attempts: 0, correct: 0, lastPracticed: null };
+            }
+
+            const wordStats = data.words[word];
+            const wasMastered = isMastered(wordStats);
+
+            wordStats.attempts++;
+            if (isCorrect) {
+                wordStats.correct++;
+            }
+            wordStats.lastPracticed = today;
+
+            const nowMastered = isMastered(wordStats);
+
+            // 更新已学单词数
+            if (isNewWord) {
+                data.totalStats.wordsLearned++;
+            }
+
+            // 更新已掌握单词数
+            if (!wasMastered && nowMastered) {
+                data.totalStats.wordsMastered++;
+            } else if (wasMastered && !nowMastered) {
+                data.totalStats.wordsMastered = Math.max(0, data.totalStats.wordsMastered - 1);
+            }
+
+            saveStatsData(data);
+
+            // 同时更新旧格式以保持兼容性
+            updateWordProgress(word, isCorrect);
+
+            // 更新侧边栏显示
+            updateSidebarStats();
+        }
+
+        // 更新侧边栏显示
+        function updateSidebarStats() {
+            const data = initializeStatsData();
+            const totalWords = getTotalWordCount();
+
+            // 总体统计
+            document.getElementById('totalAttemptsSidebar').textContent = data.totalStats.totalAttempts;
+
+            const totalAccuracy = data.totalStats.totalAttempts > 0
+                ? Math.round((data.totalStats.totalCorrect / data.totalStats.totalAttempts) * 100)
+                : 0;
+            document.getElementById('totalAccuracySidebar').textContent = totalAccuracy + '%';
+
+            document.getElementById('wordsLearnedSidebar').textContent = data.totalStats.wordsLearned;
+            document.getElementById('wordsMasteredSidebar').textContent = data.totalStats.wordsMastered;
+
+            // 掌握进度
+            const masteryPercent = totalWords > 0
+                ? Math.round((data.totalStats.wordsMastered / totalWords) * 100)
+                : 0;
+            document.getElementById('masteryProgressSidebar').style.width = masteryPercent + '%';
+            document.getElementById('masteryTextSidebar').textContent =
+                `${data.totalStats.wordsMastered}/${totalWords} 单词`;
+
+            // 今日统计
+            document.getElementById('todayAttemptsSidebar').textContent = data.todayStats.attempts;
+
+            const todayAccuracy = data.todayStats.attempts > 0
+                ? Math.round((data.todayStats.correct / data.todayStats.attempts) * 100)
+                : 0;
+            document.getElementById('todayAccuracySidebar').textContent = todayAccuracy + '%';
+
+            // 更新学习提示
+            updateStatsTip(data, totalWords);
+        }
+
+        // 更新学习提示
+        function updateStatsTip(data, totalWords) {
+            const tip = document.getElementById('statsTipSidebar');
+
+            if (data.todayStats.attempts === 0) {
+                tip.textContent = '今天还没开始练习，加油！';
+                tip.style.background = '#fff8e1';
+                tip.style.borderColor = '#ffc107';
+                tip.style.color = '#f57c00';
+            } else if (data.todayStats.attempts >= 50) {
+                tip.textContent = '今天学习很努力！注意休息';
+                tip.style.background = '#e8f5e9';
+                tip.style.borderColor = '#4caf50';
+                tip.style.color = '#2e7d32';
+            } else if (data.totalStats.wordsMastered >= totalWords * 0.8) {
+                tip.textContent = '你已经掌握大部分单词了！';
+                tip.style.background = 'linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%)';
+                tip.style.borderColor = '#764ba2';
+                tip.style.color = '#764ba2';
+            } else {
+                const remaining = totalWords - data.totalStats.wordsMastered;
+                tip.textContent = `还有 ${remaining} 个单词待掌握`;
+                tip.style.background = '#e3f2fd';
+                tip.style.borderColor = '#1976d2';
+                tip.style.color = '#1565c0';
+            }
+        }
+
+        // 侧边栏切换
+        function toggleSidebar() {
+            const sidebar = document.getElementById('statsSidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            const isMobile = window.innerWidth <= 768;
+
+            if (isMobile) {
+                sidebar.classList.toggle('expanded');
+                overlay.classList.toggle('show', sidebar.classList.contains('expanded'));
+            } else {
+                sidebar.classList.toggle('collapsed');
+            }
+        }
+
+        // 初始化侧边栏
+        function initSidebar() {
+            // 初始化统计数据
+            initializeStatsData();
+
+            // 更新显示
+            updateSidebarStats();
+
+            // 根据屏幕宽度设置初始状态
+            const sidebar = document.getElementById('statsSidebar');
+            if (window.innerWidth >= 1200) {
+                sidebar.classList.remove('collapsed');
+            } else {
+                sidebar.classList.add('collapsed');
+            }
+
+            // 监听窗口大小变化
+            window.addEventListener('resize', function() {
+                const sidebar = document.getElementById('statsSidebar');
+                const overlay = document.getElementById('sidebarOverlay');
+
+                if (window.innerWidth >= 1200) {
+                    sidebar.classList.remove('collapsed');
+                    sidebar.classList.remove('expanded');
+                    overlay.classList.remove('show');
+                } else if (window.innerWidth > 768) {
+                    sidebar.classList.remove('expanded');
+                    overlay.classList.remove('show');
+                }
+            });
+        }
+
         // Initialize on load
         init();
+        initSidebar();
     </script>
 </body>
 </html>
